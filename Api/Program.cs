@@ -1,3 +1,4 @@
+using Api.Extensions;
 using Api.Storage;
 
 namespace Api;
@@ -7,29 +8,14 @@ public class Program
     public static void Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-        
-        string hostUrl = args.Length > 0 ? args[0] : "http://localhost:3000";
-        
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-        builder.Services.AddControllers();
-        builder.Services.AddSingleton<DataContext>();
-        builder.Services.AddSingleton<ContactStorage>();
-
-        builder.Services.AddCors(opt => 
-            opt.AddPolicy("CorsPolicy", policy =>
-            {
-                policy.AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .WithOrigins(hostUrl);
-            })
-            );
+        builder.Services.AddServiceCollection(builder.Configuration);
         
         WebApplication app = builder.Build();
         
         app.UseSwagger();
         app.UseSwaggerUI();
-
+        
+        app.Services.AddFakerService(builder.Configuration);
         
         // Это endpoints
         // app.MapGet("/test", () => "Hello World!");

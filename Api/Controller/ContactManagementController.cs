@@ -7,27 +7,27 @@ namespace Api.Controller;
 
 public class ContactManagementController : BaseController
 {
-    private readonly ContactStorage _storage;
+    private readonly IStorage _storage;
     
-    public ContactManagementController(ContactStorage storage) => _storage = storage;
+    public ContactManagementController(IStorage storage) => _storage = storage;
 
     [HttpPost("contacts")]
     //                       Брать информацию из тела запроса, а не из строки
     public IActionResult CreateContact([FromBody] Contact contact)
     {
-        bool isAdd = _storage.Add(contact);
-        if (!isAdd)
+        Contact? newContact = _storage.Add(contact);
+        if (newContact == null)
         { 
             return Conflict("Contact already exists");
         }
-        return Created();
+        return Ok(newContact);
     }
 
 
     [HttpGet("contacts")]
     public ActionResult<List<Contact>> GetContacts()
     {
-        return Ok(_storage.GetContact());
+        return Ok(_storage.GetContacts());
     }
 
     [HttpDelete("contacts/{id}")]
@@ -62,7 +62,7 @@ public class ContactManagementController : BaseController
         
         if (_storage.FindContactId(id, out int contactId))
         {
-            return Ok(_storage.GetContact()[contactId]);
+            return Ok(_storage.GetContacts()[contactId]);
         }
         return NotFound("Contact not found");
     }

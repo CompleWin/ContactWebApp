@@ -4,11 +4,11 @@ using Bogus;
 
 namespace Api.Storage;
 
-public class ContactStorage
+public class InMemoryStorage : IStorage
 {
     private List<Contact> Contacts { get; set; }
     
-    public ContactStorage()
+    public InMemoryStorage()
     {
         Contacts = new List<Contact>();
         Faker faker = new Faker("ru");
@@ -25,19 +25,19 @@ public class ContactStorage
         }
     }
 
-    public List<Contact> GetContact()
+    public List<Contact> GetContacts()
     {
         return Contacts;
     }
     
-    public bool Add(Contact contact)
+    public Contact? Add(Contact contact)
     {
         if (!FindContactId(contact.Id, out int contactId))
         {
             Contacts.Add(contact);
-            return true;
+            return contact;
         }
-        return false;
+        return null;
     }
 
     public bool Remove(int id)
@@ -53,8 +53,8 @@ public class ContactStorage
 
     public bool UpdateContact(int id, ContactDto contactDto)
     {
-        bool ifFind = FindContactId(id, out int contactId);
-        if (ifFind)
+        bool isFind = FindContactId(id, out int contactId);
+        if (isFind)
         {
             Contact contact = Contacts[contactId];
             contact.Name = contactDto.Name;
