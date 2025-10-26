@@ -5,9 +5,9 @@ namespace Api.Controller;
 
 public class StorageController : BaseController
 {
-    private readonly DataContext _dataContext;
+    private readonly DataContextOld _dataContext;
     
-    public StorageController(DataContext dataContext)
+    public StorageController(DataContextOld dataContext)
     {
         _dataContext = dataContext;
     }

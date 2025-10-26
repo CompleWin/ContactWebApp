@@ -7,9 +7,9 @@ namespace Api.Controller;
 
 public class ContactManagementController : BaseController
 {
-    private readonly IStorage _storage;
+    private readonly IPaginationStorage _storage;
     
-    public ContactManagementController(IStorage storage) => _storage = storage;
+    public ContactManagementController(IPaginationStorage storage) => _storage = storage;
 
     [HttpPost("contacts")]
     //                       Брать информацию из тела запроса, а не из строки
@@ -56,14 +56,15 @@ public class ContactManagementController : BaseController
     }
 
     [HttpGet("contacts/{id}")]
-    public ActionResult<Contact> GetContactId(int id)
+    public ActionResult<Contact> GetContactById(int id)
     {
-        Console.WriteLine(id);
-        
-        if (_storage.FindContactId(id, out int contactId))
+        Contact? contact = _storage.GetContactById(id);
+        if (contact is null)
         {
-            return Ok(_storage.GetContacts()[contactId]);
+            return NotFound("Contact not found");
         }
-        return NotFound("Contact not found");
+        return Ok(contact);
     }
+    
+    
 }

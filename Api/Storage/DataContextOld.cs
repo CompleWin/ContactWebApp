@@ -1,10 +1,10 @@
 ﻿namespace Api.Storage;
 
-public class DataContext
+public class DataContextOld
 {
     public string Str { get; set; }
     
-    public DataContext()
+    public DataContextOld()
     {
         Str = String.Empty;
     }

@@ -12,15 +12,17 @@ public static class ServiceProviderExtension
         using IServiceScope scope = services.CreateScope();
         
         // Вытаскиваем конкретный IStorage
-        IStorage storage = scope.ServiceProvider.GetService<IStorage>();
+        //IStorage storage = scope.ServiceProvider.GetService<IStorage>();
+        // SqliteStorage dbStorage = storage as SqliteStorage;
+        //
+        // if (dbStorage != null)
+        // {
+        //     string connectionString = configuration.GetConnectionString("SqliteStringConnection");
+        //     new FakerInitializer(connectionString).Initialize();
+        // }
         
-        SqliteStorage dbStorage = storage as SqliteStorage;
-
-        if (dbStorage != null)
-        {
-            string connectionString = configuration.GetConnectionString("SqliteStringConnection");
-            new FakerInitializer(connectionString).Initialize();
-        }
+        IInitializer initializer = scope.ServiceProvider.GetRequiredService<IInitializer>();
+        initializer.Initialize();
         
         return services;
     }
