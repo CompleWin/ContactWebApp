@@ -11,7 +11,6 @@ const TableContact = (props) => {
                 <th>Имя контакта</th>
                 <th>Email</th>
                 <th>Номер телефона</th>
-                <th>Удалить</th>
             </tr>
 
             </thead>
@@ -24,7 +23,6 @@ const TableContact = (props) => {
                         name={contact.name}
                         phoneNumber={contact.phoneNumber}
                         email={contact.email}
-                        deleteContact={props.deleteContact}
                     />
                 ))
             }

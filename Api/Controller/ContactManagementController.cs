@@ -65,6 +65,13 @@ public class ContactManagementController : BaseController
         }
         return Ok(contact);
     }
-    
+
+    [HttpGet("contacts/page")]
+    public IActionResult GetContacts(int pageNumber = 1, int pageSize = 5)
+    {
+        (List<Contact> contacts, int total) = _storage.GetContacts(pageNumber, pageSize);
+        var response = new { Contacts = contacts, TotalCount = total, CurrentPage = pageSize, PageSize = pageSize };
+        return Ok(response);
+    }
     
 }

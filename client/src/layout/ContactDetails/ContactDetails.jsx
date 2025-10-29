@@ -5,7 +5,12 @@ import axios from "axios";
 const baseApiUrl = process.env.REACT_APP_API_URL;
 const ContactDetails = (props) => {
     
-    const [contact, setContact] = useState({name:"", phoneNumber: "", email: ""});
+    
+    
+    const [contactName, setContactName] = useState('');
+    const [contactEmail, setContactEmail] = useState('');
+    const [contactPhone, setContactPhone] = useState('');
+    
     const {id} = useParams();
     const navigate = useNavigate();
     
@@ -13,12 +18,26 @@ const ContactDetails = (props) => {
         const url = `${baseApiUrl}/contacts/${id}`;
         axios.get(url).then(
             response => {
-                setContact(response.data)
+                setContactName(response.data.name);
+                setContactEmail(response.data.email);
+                setContactPhone(response.data.phoneNumber);
             }
         ).catch((error) => {
             navigate("/");
         })
     }, [id, navigate]);
+    
+    const handleUpdateContact = () => {
+        if (window.confirm("Вы уверены, что хотите обновить контакт?"))
+        {
+            axios.put(`${baseApiUrl}/contacts/${id}`, {name: contactName,  email: contactEmail})
+                .then(navigate("/"))
+                .catch((error) => {
+                    console.log("Ошибка", error);
+                    navigate("/");
+                });
+        }
+    }
     
     return (
         <div className="container mt-5">
@@ -27,8 +46,9 @@ const ContactDetails = (props) => {
                 <label className="form-label">Имя: </label>
                 <input className="form-control"
                        type="text"
-                       value={contact.name}
+                       value={contactName}
                        onChange={(e) => {
+                           setContactName(e.target.value);
                        }}
                 />
             </div>
@@ -36,23 +56,24 @@ const ContactDetails = (props) => {
                 <label className="form-label">Номер телефона: </label>
                 <input className="form-control"
                        type="text"
-                       value={contact.phoneNumber}
-                       onChange={(e) => {
-                       }}
+                       value={contactPhone}
+                       onChange={(e) => {}}
                 />
             </div>
             <div className="mb-3">
                 <label className="form-label">Email: </label>
                 <input className="form-control"
                        type="text"
-                       value={contact.email}
+                       value={contactEmail}
                        onChange={(e) => {
+                           setContactEmail(e.target.value);
                        }}
                 />
             </div>
 
             <button className="btn btn-primary me-2"
                     onClick={(e) => {
+                        handleUpdateContact();
                     }}
             >
                 Обновить
