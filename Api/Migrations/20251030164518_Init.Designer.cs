@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20251024173903_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251030164518_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

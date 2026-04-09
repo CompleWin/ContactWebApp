@@ -22,7 +22,7 @@ public static class ServiceProviderExtension
         // }
         
         IInitializer initializer = scope.ServiceProvider.GetRequiredService<IInitializer>();
-        initializer.Initialize();
+        initializer.Initialize(1000);
         
         return services;
     }

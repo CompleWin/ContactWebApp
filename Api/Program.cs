@@ -16,6 +16,13 @@ public class Program
         app.UseSwaggerUI();
         
         app.Services.AddFakerService(builder.Configuration);
+
+        app.UseConfigMiddleware();
+        
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
+        // Настраивать маршрутизацию для нашего приложения
+        app.MapFallbackToController("Index", "Fallback");
         
         // Это endpoints
         // app.MapGet("/test", () => "Hello World!");

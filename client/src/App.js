@@ -2,12 +2,12 @@ import TableContact from "./layout/TableContact/TableContact";
 import { useState, useEffect } from "react";
 import FormContact from "./layout/FormContact/FormContact";
 import axios from "axios";
-import {Route, Routes, useLocation} from "react-router-dom";
+import { Route, Routes, useLocation, Link } from "react-router-dom";
 import ContactDetails from "./layout/ContactDetails/ContactDetails";
 import Pagination from "./layout/Pagination/Pagination";
+import AppendContact from "./layout/FormContact/AppendContact";
 
-
-const baseApiUrl = process.env.REACT_APP_API_URL;
+const baseApiUrl = window.config.apiUrl;
 
 const App = () => {
 
@@ -16,20 +16,26 @@ const App = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [pageSize] = useState(10);
     const location = useLocation();
+    const [updateTrigger, setUpdateTrigger] = useState(false);
+
+
+    const handleUpdateTrigger = () => {
+        setUpdateTrigger(updateTrigger + 1);
+    }
 
     const baseUrl = `${baseApiUrl}/contacts`;
-    
+
     useEffect(() => {
-        axios.get(baseUrl+`/page?pageNumber=${currentPage}&pageSize=${pageSize}`).then((response) => {
+        axios.get(baseUrl + `/page?pageNumber=${currentPage}&pageSize=${pageSize}`).then((response) => {
             setContacts(response.data.contacts);
             setTotalPages(Math.ceil(response.data.totalCount / pageSize));
         })
-    }, [currentPage, pageSize, location.pathname])
+    }, [currentPage, pageSize, location.pathname, updateTrigger])
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     }
-    
+
     const addContact = (contactName, phoneNumber, contactEmail) => {
 
         //Так можно отсортировать по возрастанию и найди максимальный элемент
@@ -50,8 +56,8 @@ const App = () => {
         }
 
         axios.post(baseUrl, item);
-        
-        axios.get(baseUrl+`/page?pageNumber=${currentPage}&pageSize=${pageSize}`).then(
+
+        axios.get(baseUrl + `/page?pageNumber=${currentPage}&pageSize=${pageSize}`).then(
             (response) => {
                 setContacts(response.data.contacts);
                 setTotalPages(Math.ceil(response.data.totalCount / pageSize));
@@ -63,6 +69,7 @@ const App = () => {
     const deleteContact = (id) => {
         setContacts(contacts.filter(item => item.id !== id));
         axios.delete(baseUrl + `/${id}`);
+        handleUpdateTrigger();
     }
 
     return (
@@ -80,18 +87,23 @@ const App = () => {
                                 contacts={contacts}
                                 deleteContact={deleteContact}
                             />
-                            
+
                             <Pagination
                                 currentPage={currentPage}
                                 totalPages={totalPages}
                                 onPageChange={handlePageChange}
                             ></Pagination>
-                            
-                            <FormContact addContact={addContact} />
+                            <Link to="/append"
+                                className="btn btn-success mt-3">
+                                Добавить контакт
+                            </Link>
                         </div>
                     </div>
                 } />
-                <Route path="contact/:id" element={<ContactDetails deleteContact={deleteContact}/>} />
+                <Route path="contact/:id" element={<ContactDetails
+                    deleteContact={deleteContact}
+                    onUpdate={handleUpdateTrigger} />} />
+                <Route path="append" element={<AppendContact />} />
             </Routes>
         </div>
     );

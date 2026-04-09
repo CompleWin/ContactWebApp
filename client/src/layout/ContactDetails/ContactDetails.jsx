@@ -2,7 +2,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 
-const baseApiUrl = process.env.REACT_APP_API_URL;
+const baseApiUrl = window.config.apiUrl;
 const ContactDetails = (props) => {
     
     
@@ -31,7 +31,10 @@ const ContactDetails = (props) => {
         if (window.confirm("Вы уверены, что хотите обновить контакт?"))
         {
             axios.put(`${baseApiUrl}/contacts/${id}`, {name: contactName,  email: contactEmail})
-                .then(navigate("/"))
+                .then(() => {
+                    navigate("/")
+                    props.onUpdate();
+                })
                 .catch((error) => {
                     console.log("Ошибка", error);
                     navigate("/");

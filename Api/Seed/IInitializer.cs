@@ -2,5 +2,5 @@
 
 public interface IInitializer
 {
-    void Initialize(int numOfContacts=20);
+    void Initialize(int numOfContacts = 20);
 }

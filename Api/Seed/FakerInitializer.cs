@@ -61,7 +61,5 @@ public class FakerInitializer : IInitializer
                 sqlCommand.ExecuteNonQuery();
             }
         }
-        
-        
     }
 }

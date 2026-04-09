@@ -26,7 +26,7 @@ const FormContact = (props) => {
     return (
         <div>
             
-            <div className="mb-3">
+            <div className="mb-4 ms-3 me-3 mt-3">
                 <form>
                     <div className="mb-3">
                         <label className="form-label">Введите имя</label>
@@ -55,7 +55,7 @@ const FormContact = (props) => {
                 </form>
             </div>
             
-            <div>
+            <div className="ms-3 mb-3">
                 <button className="btn btn-primary"
                         onClick={() => {sumbit()}}
                 >
